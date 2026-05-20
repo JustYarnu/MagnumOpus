@@ -2,8 +2,8 @@ import os
 import time
 from git import Repo
 
-REPO_PATH = "./MagnumOpus"  
-TEXT_FILE_PATH = "./MagnumOpus/bibel.txt"  
+REPO_PATH = "./"  
+TEXT_FILE_PATH = "./bibel.txt"  
 BRANCH_NAME = "main"
 DELAY_SECONDS = 900
 DAILY_LIMIT = 100
