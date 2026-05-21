@@ -1,14 +1,12 @@
-version: '3.8'
-
 services:
   commit-bot:
     build: .
-    container_name: MagnumOpus
-    volumes:
-      - ./:/app
-      - ~/.ssh:/root/.ssh:ro
-      - ~/.gitconfig:/root/.gitconfig:ro
     environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONPATH=/app
       - GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no
+      - SSH_AUTH_SOCK=/ssh-agent
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app
+      - ~/.ssh:/root/.ssh:ro
+      - /run/host-services/ssh-auth.sock:/ssh-agent
