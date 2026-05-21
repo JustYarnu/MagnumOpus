@@ -5,9 +5,9 @@ from git import Repo
 REPO_PATH = "./"  
 TEXT_FILE_PATH = "./bibel.txt"  
 BRANCH_NAME = "main"
-DELAY_SECONDS = 300
-DAILY_LIMIT = 500
-PUSH_INTERVAL = 50
+DELAY_SECONDS = 60
+DAILY_LIMIT = 200
+PUSH_INTERVAL = 100
 
 def process_batch():
     if not os.path.exists(TEXT_FILE_PATH):
