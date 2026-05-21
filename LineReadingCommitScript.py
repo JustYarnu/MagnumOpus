@@ -6,8 +6,8 @@ REPO_PATH = "./"
 TEXT_FILE_PATH = "./bibel.txt"  
 BRANCH_NAME = "main"
 DELAY_SECONDS = 60
-INTERVAL_LIMIT = 200
-PUSH_INTERVAL = 400
+COMMIT_LIMIT = 1000
+PUSH_INTERVAL = 500
 
 def process_batch():
     if not os.path.exists(TEXT_FILE_PATH):
@@ -22,7 +22,7 @@ def process_batch():
 
     commit_count = 0
 
-    for _ in range(INTERVAL_LIMIT):
+    for _ in range(COMMIT_LIMIT):
         with open(TEXT_FILE_PATH, "r", encoding="utf-8") as f:
             lines = f.readlines()
 
@@ -47,7 +47,7 @@ def process_batch():
             repo.git.add(all=True)
             repo.index.commit(commit_message)
             commit_count += 1
-            print(f"Committed locally ({commit_count}/{INTERVAL_LIMIT}): '{commit_message}'")
+            print(f"Committed locally ({commit_count}/{COMMIT_LIMIT}): '{commit_message}'")
 
             if commit_count % PUSH_INTERVAL == 0:
                 print(f"Batch limit reached ({PUSH_INTERVAL} commits). Pushing to remote...")
