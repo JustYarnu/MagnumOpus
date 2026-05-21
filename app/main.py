@@ -1,11 +1,6 @@
 from queue import Queue
 
-import git
-from git import config
-from joblib import Logger
-
 from app.config import load_config
-from app.observability import metrics
 from app.pipeline.producer import CommitProducer
 from app.pipeline.consumer import CommitConsumer
 from app.pipeline.git_client import GitClient
@@ -14,17 +9,17 @@ from app.observability.logger import EventLogger
 
 
 def run():
+    app_config = load_config()
 
-    config = load_config()
-
-    git = GitClient(config.repo.path)
+    git_client = GitClient(app_config.repo.path)
     metrics = Metrics()
     logger = EventLogger()
 
     queue = Queue()
 
-    producer = CommitProducer(config.file.input_path)
-    consumer = CommitConsumer(git, metrics, config, logger)
+    producer = CommitProducer(app_config.file.input_path)
+    consumer = CommitConsumer(git_client, metrics, app_config, logger)
+
     producer.produce(queue)
     consumer.consume(queue)
 

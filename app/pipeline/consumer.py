@@ -1,4 +1,6 @@
 import time
+from queue import Empty
+
 
 class CommitConsumer:
     def __init__(self, git_client, metrics, config, logger):
@@ -12,10 +14,11 @@ class CommitConsumer:
         self.batch_number = 0
 
     def consume(self, queue):
-
-        while not queue.empty() and self.total_commits < self.config.commit.limit:
-
-            msg = queue.get()
+        while self.total_commits < self.config.commit.limit:
+            try:
+                msg = queue.get_nowait()
+            except Empty:
+                break
 
             try:
                 self.git.commit_all(msg)
@@ -32,7 +35,6 @@ class CommitConsumer:
                 )
 
                 if self.commits_since_push >= self.config.commit.push_interval:
-
                     self.batch_number += 1
 
                     self.git.push(self.config.repo.branch)
