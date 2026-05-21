@@ -6,6 +6,6 @@ file:
   input_path: "./bibel.txt"
 
 commit:
-  limit: 200
-  push_interval: 100
-  delay_seconds: 60
+  limit: 20
+  push_interval: 10
+  delay_seconds: 3
