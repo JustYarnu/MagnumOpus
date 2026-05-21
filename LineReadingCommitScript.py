@@ -5,8 +5,8 @@ from git import Repo
 REPO_PATH = "./"  
 TEXT_FILE_PATH = "./bibel.txt"  
 BRANCH_NAME = "main"
-DELAY_SECONDS = 60
-DAILY_LIMIT = 100
+DELAY_SECONDS = 50
+DAILY_LIMIT = 500
 
 def process_batch():
     for _ in range(DAILY_LIMIT):
