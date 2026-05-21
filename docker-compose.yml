@@ -3,10 +3,14 @@ services:
     build: .
     environment:
       - GIT_SSH_COMMAND=ssh -o StrictHostKeyChecking=no
-      - SSH_AUTH_SOCK=/ssh-agent
       - PYTHONPATH=/app
       - PYTHONUNBUFFERED=1
     volumes:
       - .:/app
-      - ~/.ssh:/root/.ssh:ro
-      - /run/host-services/ssh-auth.sock:/ssh-agent
+      # We have lost the fucking plot
+      - ~/.ssh:/tmp/.ssh:ro
+    command: >
+      sh -c "mkdir -p /root/.ssh && 
+      cp /tmp/.ssh/id_rsa /root/.ssh/id_rsa && 
+      chmod 600 /root/.ssh/id_rsa && 
+      python app/main.py"
