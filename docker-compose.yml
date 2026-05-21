@@ -1,18 +1,13 @@
-version: "3.9"
+version: '3.8'
 
 services:
   commit-bot:
     build: .
-    container_name: commit-bot
-
+    container_name: MagnumOpus
     volumes:
-      - .:/app
-
+      - ./:/app
+      - ~/.ssh:/root/.ssh:ro
+      - ~/.gitconfig:/root/.gitconfig:ro
     environment:
       - PYTHONUNBUFFERED=1
-
-    working_dir: /app
-
-    command: python -m app.main
-
-    restart: unless-stopped
+      - PYTHONPATH=/app
