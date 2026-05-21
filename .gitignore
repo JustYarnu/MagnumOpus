@@ -1,0 +1,17 @@
+# Credentials
+.env
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# Docker & Environment
+__pycache__/
+*.pyc
+.docker/
+.venv/
+venv/
+.env.local
+
+# Git internals
+.git/index.lock
