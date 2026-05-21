@@ -26,3 +26,6 @@ class EventLogger:
 
     def timeout(self, seconds: int):
         self.logger.info(f"TIMEOUT | {seconds}s")
+
+    def error(self, msg: str, exception: Exception):
+        self.logger.error(f"ERROR  | {msg} | {str(exception)}")

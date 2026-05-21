@@ -45,7 +45,8 @@ class CommitConsumer:
                     self.logger.timeout(self.config.commit.delay_seconds)
                     time.sleep(self.config.commit.delay_seconds)
 
-            except Exception:
+            except Exception as e:
                 self.metrics.inc_failed()
+                self.logger.error("Commit failed", e)
 
             queue.task_done()
