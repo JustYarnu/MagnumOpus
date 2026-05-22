@@ -16,7 +16,6 @@ MagnumOpus achieves repository history manipulation by utilizing a highly synchr
 - A willingness to accept that everything is technically a pipeline if you think about it long enough
 
 ## Installation Guide
-
 ### Step 1: Clone repository
 ```bash
 git clone https://example.com/mocof.git
