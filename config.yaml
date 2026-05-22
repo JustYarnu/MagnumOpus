@@ -3,7 +3,7 @@ repo:
   branch: "main"
 
 file:
-  input_path: "./bibel.txt"
+  input_path: "./EBBE.txt"
 
 commit:
   limit: 5000
