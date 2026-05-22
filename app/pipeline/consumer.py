@@ -1,3 +1,5 @@
+from os import path
+import queue
 import time
 from queue import Empty
 
@@ -13,12 +15,22 @@ class CommitConsumer:
         self.total_commits = 0
         self.batch_number = 0
 
+    def _remove_first_line(self):
+        path = self.config.file.input_path
+
+        with open(path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        lines = [l for l in lines if l.strip()]
+        remaining = lines[1:] if lines else []
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.writelines(remaining)
+    
     def consume(self, queue):
-        while self.total_commits < self.config.commit.limit:
-            try:
-                msg = queue.get_nowait()
-            except Empty:
-                break
+        while not queue.empty() and self.total_commits < self.config.commit.limit:
+
+            msg = queue.get()
 
             try:
                 self.git.commit_all(msg)
@@ -34,6 +46,8 @@ class CommitConsumer:
                     msg=msg
                 )
 
+                self._remove_first_line()
+
                 if self.commits_since_push >= self.config.commit.push_interval:
                     self.batch_number += 1
 
@@ -44,11 +58,10 @@ class CommitConsumer:
 
                     self.commits_since_push = 0
 
-                    self.logger.timeout(self.config.commit.delay_seconds)
                     time.sleep(self.config.commit.delay_seconds)
 
             except Exception as e:
                 self.metrics.inc_failed()
                 self.logger.error("Commit failed", e)
 
-            queue.task_done()
+        queue.task_done()
