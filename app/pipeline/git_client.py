@@ -9,20 +9,37 @@ class GitClient:
         token = os.getenv("GITHUB_TOKEN")
         repo_url = os.getenv("GITHUB_REPO")
 
-        # Default remote name
+        if not repo_url:
+            raise ValueError("GITHUB_REPO is not set")
+
+        # Ensure clean HTTPS URL
+        if repo_url.startswith("git@"):
+            raise ValueError("SSH URLs are not supported. Use HTTPS format.")
+
         self.remote_name = "origin"
 
-        # If token + repo URL exist, rewrite origin URL safely
-        if token and repo_url:
-            repo_clean = repo_url.replace("https://", "").replace("http://", "")
-            authenticated_url = f"https://{token}@{repo_clean}"
+        if token:
+            if repo_url.startswith("https://"):
+                auth_url = repo_url.replace(
+                    "https://",
+                    f"https://{token}@"
+                )
+            else:
+                # fallback safety
+                auth_url = f"https://{token}@{repo_url}"
+        else:
+            auth_url = repo_url
 
-            try:
+        # Configure remote
+        try:
+            if self.remote_name in self.repo.remotes:
                 remote = self.repo.remote(self.remote_name)
-                remote.set_url(authenticated_url)
-            except Exception:
-                # fallback if remote doesn't exist yet
-                pass
+                remote.set_url(auth_url)
+            else:
+                self.repo.create_remote(self.remote_name, auth_url)
+        except Exception:
+            # If remote already exists but can't be modified cleanly
+            pass
 
     def commit_all(self, message: str):
         self.repo.git.add(all=True)
